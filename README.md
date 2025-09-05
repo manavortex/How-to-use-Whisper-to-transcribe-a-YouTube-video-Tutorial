@@ -75,7 +75,7 @@ accuracy and speed (compute needed).
 import whisper
 
 model = whisper.load_model("base")
-text = model1.transcribe("Python in 100 Seconds.mp4")
+text = model.transcribe("Python in 100 Seconds.mp4")
 
 #printing the transcribe
 text['text']
