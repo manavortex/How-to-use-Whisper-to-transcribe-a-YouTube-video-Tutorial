@@ -101,7 +101,7 @@ result = model.transcribe(file_path)
 
 # Save as a TXT file with hard line breaks
 txt_writer = get_writer("txt", output_directory)
-txt_writer(result, audio)
+txt_writer(result, "output.txt")
 ```
 
 ### Troubleshooting
