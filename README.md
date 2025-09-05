@@ -14,57 +14,69 @@ languages into English. Unlike DALLE-2 and GPT-3, Whisper is a free and open-sou
  the models and code to serve as a foundation for building useful
 applications that leverage speech recognition.
 
-## How to transcribe a YouTube video
+# How to transcribe a YouTube video
 
 In this tutorial we will use Whisper to transcribe a YouTube video. We will use the Python package "Pytube" to 
 download convert the sounds into a `MP4` file. You can find the repo of Pytube [here](https://github.com/pytube/pytube)
 
+## Installing prerequisites
+
 First, we need to install the Pytube Library. You can do this by running the following command in your terminal:
 
 ```bash
-!pip install -— upgrade pytube
+!pip install -- upgrade pytube
 ```
+
+Since pytube is outdated, you also need to install pytubefix (which is maintained and working as of September 2025):
+```bash
+!pip install pytubefix
+```
+
+And finally, we'll install whisper for the actual conversion to text:
+```bash
+!pip install git+https://github.com/openai/whisper.git -q
+```
+
+## Downloading the audio
 
 For this tutorial i'll be using [this](https://www.youtube.com/watch?v=x7X9w_GIm1s) "Python in 100 Seconds" Video. 
 
-Next, we need to import Pytube, provide the link to the YouTube video, and convert the audio to `MP4`:
+Create a python file. We will provide the link to the video and use pytubefix to convert its audio to `MP4`:
 
 ```python
-#Importing Pytube library
-import pytube
+from pytubefix import YouTube
+from pytubefix.cli import on_progress
 
 # Reading the above Taken movie Youtube link
-video = "https://www.youtube.com/watch?v=x7X9w_GIm1s"
-data = pytube.YouTube(video)
+url = "https://www.youtube.com/watch?v=x7X9w_GIm1s"
 
-# Converting and downloading as 'MP4' file
-audio = data.streams.get_audio_only()
-audio.download()
+yt = YouTube(url, on_progress_callback=on_progress)
+print(yt.title)
+
+ys = yt.streams.get_highest_resolution()
+ys.download()
 ```
 
 The output is a file named like the video title in your current directory. In our case, the file is named `Python in 100 Seconds.mp4`
-Now, the next step is to convert audio into text. We can do this in three lines of code using whisper. First, we install and import 
-whisper. Then we load the model and finally we transcribe the audio file.
 
-```python
-# Installing Whisper libary
+## Audio to text
 
-!pip install git+https://github.com/openai/whisper.git -q
-import whisper
-```
+The next step is to convert audio into text. We can do this in three lines of code using whisper:
 
-Load the model. We'll use the "base" model for this tutorial. You can find more information about the 
+* import whisper
+* load the model
+* transcribe the audio file
+
+We'll use the "base" model for this tutorial. You can find more information about the 
 models [here](https://github.com/openai/whisper/blob/main/model-card.md). Each one of them has tradeoffs between 
 accuracy and speed (compute needed).
 
 ```python
+import whisper
+
 model = whisper.load_model("base")
 text = model1.transcribe("Python in 100 Seconds.mp4")
-```
 
-And now we can print out the output.
-
-```python
 #printing the transcribe
 text['text']
 ```
