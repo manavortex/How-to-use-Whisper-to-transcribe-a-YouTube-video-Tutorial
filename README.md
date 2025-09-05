@@ -74,12 +74,51 @@ accuracy and speed (compute needed).
 ```python
 import whisper
 
+file_path = "Python in 100 Seconds.mp4"
+
 model = whisper.load_model("base")
-text = model.transcribe("Python in 100 Seconds.mp4")
+result = model.transcribe(file_path)
 
 #printing the transcribe
-text['text']
+print(result['text'])
 ```
+
+### Printing result with linebreaks:
+
+Use `whisper.utils` to write results to a text file:
+
+```python
+import whisper
+from whisper.utils import get_writer
+
+file_path = "Python in 100 Seconds.mp4"
+output_directory = "./"
+
+# whisper: load model
+model = whisper.load_model("base")
+
+result = model.transcribe(file_path)
+
+# Save as a TXT file with hard line breaks
+txt_writer = get_writer("txt", output_directory)
+txt_writer(result, audio)
+```
+
+### Troubleshooting
+
+> "FP16 is not supported on CPU; using FP32 instead"
+
+Install `torch` for device switching in pytorch:
+```bash
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+```
+
+Use torch to switch the device:
+```python
+import torch
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+```
+---
 
 You can find the full code as Jupyter Notebook [here](https://github.com/lablab-ai/How-to-use-OpenAIs-Whisper-Tutorial/blob/main/whisper-tutorial.ipynb)
 
